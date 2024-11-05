@@ -1,3 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /customer-support-management/api
 spring:
   application:
     name: csm-service
+  datasource:
+    driver-class-name: ${DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/csm?useSSL=false&serverTimezone=UTC}
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:}
+  messages:
+    basename: i18n/messages
+  threads:
+    virtual:
+      enabled: true
