@@ -2,7 +2,11 @@ package com.julianjupiter.csm.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 import java.time.Instant;
@@ -29,6 +33,13 @@ public class User {
     private Boolean enabled;
     private Boolean emailVerified;
     private Boolean mobileNumberVerified;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
     private String createdBy;
@@ -168,6 +179,15 @@ public class User {
 
     public User setMobileNumberVerified(Boolean mobileNumberVerified) {
         this.mobileNumberVerified = mobileNumberVerified;
+        return this;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public User setRoles(Set<Role> roles) {
+        this.roles = roles;
         return this;
     }
 
