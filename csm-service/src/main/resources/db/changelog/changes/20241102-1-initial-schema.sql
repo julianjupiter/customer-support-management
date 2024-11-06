@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS user (
     last_name VARCHAR(255) NOT NULL,
     extension_name VARCHAR(255) NULL,
     mobile_number VARCHAR(255) NULL,
-    account_not_expired BOOLEAN NOT NULL DEFAULT TRUE,
+    account_non_expired BOOLEAN NOT NULL DEFAULT TRUE,
     account_non_locked BOOLEAN NOT NULL DEFAULT TRUE,
     credentials_non_expired BOOLEAN NOT NULL DEFAULT TRUE,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
