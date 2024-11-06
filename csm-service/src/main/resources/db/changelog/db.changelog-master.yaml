@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: classpath:/db/changelog/changes/20241102-1-initial-schema.sql
+  - include:
+      file: classpath:/db/changelog/changes/20241107-1-initial-user-data.sql
