@@ -27,7 +27,7 @@ public class User {
     private String lastName;
     private String extensionName;
     private String mobileNumber;
-    private Boolean accountNotExpired;
+    private Boolean accountNonExpired;
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
@@ -128,12 +128,12 @@ public class User {
         return this;
     }
 
-    public Boolean isAccountNotExpired() {
-        return accountNotExpired;
+    public Boolean isAccountNonExpired() {
+        return accountNonExpired;
     }
 
-    public User setAccountNotExpired(Boolean accountNotExpired) {
-        this.accountNotExpired = accountNotExpired;
+    public User setAccountNonExpired(Boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
         return this;
     }
 

@@ -15,3 +15,10 @@ spring:
   threads:
     virtual:
       enabled: true
+
+application:
+  security:
+    id-for-encode: bcrypt
+    jwt:
+      secret-key: 383658124f0f220e461465fe46e0ac1fca74074bfac8de1a57c7f234ed731880af8084bb78db48047834779167dd6967a04b6e9a7604a89428e80839bf0dcac2
+      expiration: 86400000
