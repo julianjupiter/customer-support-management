@@ -52,7 +52,7 @@ class DefaultJwtService implements JwtService {
     }
 
     @Override
-    public boolean validateToken(String accessToken, UserDetails userDetails) {
+    public boolean validateToken(String accessToken) {
         Jwts.parser().verifyWith((SecretKey) this.getSignKey())
                 .build()
                 .parse(accessToken);
