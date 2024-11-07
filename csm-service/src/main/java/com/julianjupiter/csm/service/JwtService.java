@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface JwtService {
     TokenDto generateToken(Authentication authentication);
 
-    boolean validateToken(String accessToken, UserDetails userDetails);
+    boolean validateToken(String accessToken);
 
     String extractUsername(String accessToken);
 }
