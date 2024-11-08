@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page }}</title>
+</head>
+    <body>
+        <p>{{ page }} - List</p>
+        <ol>
+            <li>HTTP Status 400</li>
+            <li>HTTP Status 401</li>
+            <li>HTTP Status 403</li>
+            <li>HTTP Status 404</li>
+            <li>HTTP Status 405</li>
+            <li>HTTP Status 422</li>
+            <li>HTTP Status 500</li>
+        </ol>
+    </body>
+</html>

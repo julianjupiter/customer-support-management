@@ -1,15 +1,17 @@
 server:
   port: 8080
   servlet:
-    context-path: /customer-support-management/api
+    context-path: ${APPLICATION_CONTEXT_PATH:/customer-support-management}
 spring:
   application:
-    name: csm-service
+    name: ${APPLICATION_NAME:csm-service}
   datasource:
     driver-class-name: ${DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
     url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/csm?useSSL=false&serverTimezone=UTC}
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:}
+  jpa:
+    open-in-view: false
   messages:
     basename: i18n/messages
   threads:
@@ -18,7 +20,8 @@ spring:
 
 application:
   security:
-    id-for-encode: bcrypt
+    id-for-encode: ${ID_FOR_ENCODE:bcrypt}
     jwt:
-      secret-key: 383658124f0f220e461465fe46e0ac1fca74074bfac8de1a57c7f234ed731880af8084bb78db48047834779167dd6967a04b6e9a7604a89428e80839bf0dcac2
-      expiration: 86400000
+      secret-key: ${JWT_SECRET_KEY:383658124f0f220e461465fe46e0ac1fca74074bfac8de1a57c7f234ed731880af8084bb78db48047834779167dd6967a04b6e9a7604a89428e80839bf0dcac2}
+      # 5 minutes
+      expiration: ${JWT_EXPIRATION:300000}

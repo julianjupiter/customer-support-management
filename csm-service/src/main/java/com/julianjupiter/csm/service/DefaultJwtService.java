@@ -9,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -23,13 +22,16 @@ import java.util.stream.Collectors;
  */
 @Service
 class DefaultJwtService implements JwtService {
+    private final String applicationName;
     private final String secretKey;
     private final long expiration;
 
     DefaultJwtService(
+            @Value("${spring.application.name}") String applicationName,
             @Value("${application.security.jwt.secret-key}") String secretKey,
             @Value("${application.security.jwt.expiration}") long expiration
     ) {
+        this.applicationName = applicationName;
         this.secretKey = secretKey;
         this.expiration = expiration;
     }
@@ -38,10 +40,10 @@ class DefaultJwtService implements JwtService {
     public TokenDto generateToken(Authentication authentication) {
         var user = (JwtUser) authentication.getPrincipal();
         var claims = Map.of(
-                "id", user.getId(),
+                "user_id", user.getId(),
                 "name", user.getName(),
                 "first_name", user.getFirstName(),
-                "lat_name", user.getLastName(),
+                "last_name", user.getLastName(),
                 "email", user.getEmail(),
                 "roles", user.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
@@ -52,17 +54,17 @@ class DefaultJwtService implements JwtService {
     }
 
     @Override
-    public boolean validateToken(String accessToken) {
-        Jwts.parser().verifyWith((SecretKey) this.getSignKey())
+    public void validateToken(String accessToken) {
+        Jwts.parser()
+                .verifyWith((SecretKey) this.getSignKey())
                 .build()
                 .parse(accessToken);
-        return true;
     }
 
     @Override
     public String extractUsername(String accessToken) {
         return Jwts.parser()
-                .verifyWith((SecretKey) getSignKey())
+                .verifyWith((SecretKey) this.getSignKey())
                 .build()
                 .parseSignedClaims(accessToken)
                 .getPayload()
@@ -74,6 +76,7 @@ class DefaultJwtService implements JwtService {
         var expiresIn = new Date(currentTimeMillis + this.expiration);
         var accessToken = Jwts.builder()
                 .id(Uuid.create().toString())
+                .issuer(this.applicationName)
                 .claims(claims)
                 .subject(username)
                 .issuedAt(new Date(currentTimeMillis))

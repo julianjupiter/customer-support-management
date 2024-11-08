@@ -1,14 +1,19 @@
 package com.julianjupiter.csm.config;
 
-import com.julianjupiter.csm.security.JwtAuthFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.julianjupiter.csm.security.JwtAuthorizationFilter;
 import com.julianjupiter.csm.security.Roles;
+import com.julianjupiter.csm.util.AppUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,33 +38,34 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
     private static final String[] WHITE_LIST_URL = {
-            "/v1/auth/login",
-            "/v1/auth/register"
+            "/assets/**",
+            "/problem-detail/**",
+            "/api/v1/auth/login",
+            "/api/v1/auth/register"
     };
     private final UserDetailsService userDetailsService;
-    private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final ObjectMapper objectMapper;
 
-    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          JwtAuthorizationFilter jwtAuthorizationFilter,
+                          ObjectMapper objectMapper) {
         this.userDetailsService = userDetailsService;
-        this.jwtAuthFilter = jwtAuthFilter;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+        this.objectMapper = objectMapper;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+    public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
+        var authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(this.userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         var providerManager = new ProviderManager(authenticationProvider);
         providerManager.setEraseCredentialsAfterAuthentication(false);
 
         return providerManager;
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
-        var authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(this.userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-
-        return authenticationProvider;
     }
 
     @Bean
@@ -80,22 +86,40 @@ public class SecurityConfig {
         var agent = Roles.AGENT.name();
 
         httpSecurity
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/tickets").hasRole(agent)
-                        .requestMatchers(HttpMethod.GET, "/v1/tickets/**").hasAnyRole(admin, agent)
-                        .requestMatchers(HttpMethod.PATCH, "/v1/tickets/**").hasAnyRole(admin, agent)
-                        .requestMatchers(HttpMethod.PUT, "/v1/tickets/**").hasAnyRole(admin, agent)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/tickets").hasRole(agent)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tickets/**").hasAnyRole(admin, agent)
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/tickets/**").hasAnyRole(admin, agent)
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/tickets/**").hasAnyRole(admin, agent)
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(authorize -> authorize
-                        .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            var httpStatus = HttpStatus.valueOf(HttpServletResponse.SC_FORBIDDEN);
+
+                            var problemDetail = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+                            problemDetail.setType(AppUtil.problemDetailTypeUri(request, httpStatus, 1002));
+                            problemDetail.setDetail(accessDeniedException.getMessage());
+                            problemDetail.setProperties(Map.of(
+                                    "code", 1002
+                            ));
+                            problemDetail.setInstance(AppUtil.requestForwardUri(request));
+
+                            var jsonString = this.objectMapper.writeValueAsString(problemDetail);
+
+                            response.setStatus(httpStatus.value());
+                            response.addHeader("Content-Type", "application/json");
+                            response.getWriter().write(jsonString);
+                        })
                 )
                 .sessionManagement(authorize -> authorize
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilterBefore(this.jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(this.jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
