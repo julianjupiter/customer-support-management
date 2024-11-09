@@ -1,6 +1,8 @@
 package com.julianjupiter.csm.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,8 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleType name;
     private String description;
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
@@ -34,11 +37,11 @@ public class Role {
         return this;
     }
 
-    public String getName() {
+    public RoleType getName() {
         return name;
     }
 
-    public Role setName(String name) {
+    public Role setName(RoleType name) {
         this.name = name;
         return this;
     }

@@ -2,7 +2,6 @@ package com.julianjupiter.csm.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.julianjupiter.csm.service.JwtService;
-import com.julianjupiter.csm.service.UserService;
 import com.julianjupiter.csm.util.AppUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,12 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -29,12 +28,12 @@ import java.util.Optional;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
 
-    public JwtAuthorizationFilter(JwtService jwtService, UserService userService, ObjectMapper objectMapper) {
+    public JwtAuthorizationFilter(JwtService jwtService, UserDetailsService userDetailsService, ObjectMapper objectMapper) {
         this.jwtService = jwtService;
-        this.userService = userService;
+        this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
     }
 
@@ -56,7 +55,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
             String username = this.jwtService.extractUsername(accessToken);
             if (username != null) {
-                var user = this.userService.loadUserByUsername(username);
+                var user = this.userDetailsService.loadUserByUsername(username);
                 if (user != null) {
                     var authenticationToken = new UsernamePasswordAuthenticationToken(
                             user, null, user.getAuthorities()

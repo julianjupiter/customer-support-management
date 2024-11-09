@@ -1,8 +1,8 @@
 package com.julianjupiter.csm.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.julianjupiter.csm.entity.RoleType;
 import com.julianjupiter.csm.security.JwtAuthorizationFilter;
-import com.julianjupiter.csm.security.Roles;
 import com.julianjupiter.csm.util.AppUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -82,8 +82,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        var admin = Roles.ADMIN.name();
-        var agent = Roles.AGENT.name();
+        var admin = RoleType.ROLE_ADMIN.name().substring(5);
+        var agent = RoleType.ROLE_AGENT.name().substring(5);
 
         httpSecurity
                 .cors(AbstractHttpConfigurer::disable)
