@@ -90,7 +90,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/tickets").hasRole(agent)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/tickets").hasRole(agent) // admin cannot create ticket, only agent
                         .requestMatchers(HttpMethod.GET, "/api/v1/tickets/**").hasAnyRole(admin, agent)
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/tickets/**").hasAnyRole(admin, agent)
                         .requestMatchers(HttpMethod.PUT, "/api/v1/tickets/**").hasAnyRole(admin, agent)
@@ -102,11 +102,8 @@ public class SecurityConfig {
                             var httpStatus = HttpStatus.valueOf(HttpServletResponse.SC_FORBIDDEN);
 
                             var problemDetail = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
-                            problemDetail.setType(AppUtil.problemDetailTypeUri(request, httpStatus, 1002));
+                            problemDetail.setType(AppUtil.problemDetailTypeUri(request, httpStatus));
                             problemDetail.setDetail(accessDeniedException.getMessage());
-                            problemDetail.setProperties(Map.of(
-                                    "code", 1002
-                            ));
                             problemDetail.setInstance(AppUtil.requestForwardUri(request));
 
                             var jsonString = this.objectMapper.writeValueAsString(problemDetail);

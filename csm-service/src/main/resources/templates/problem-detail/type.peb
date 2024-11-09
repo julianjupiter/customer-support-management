@@ -5,6 +5,6 @@
     <title>{{ page }} - HTTP Status {{ httpStatus }}</title>
 </head>
     <body>
-        <p>{{ httpStatus }} - {{ errorCode }}</p>
+        <p>HTTP Status: {{ httpStatus }}</p>
     </body>
 </html>

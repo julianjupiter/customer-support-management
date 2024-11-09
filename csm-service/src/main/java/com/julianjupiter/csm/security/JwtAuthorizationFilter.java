@@ -92,11 +92,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         var httpStatus = HttpStatus.valueOf(HttpServletResponse.SC_UNAUTHORIZED);
 
         var problemDetail = ProblemDetail.forStatus(httpStatus);
-        problemDetail.setType(AppUtil.problemDetailTypeUri(request, httpStatus, 1003));
+        problemDetail.setType(AppUtil.problemDetailTypeUri(request, httpStatus));
         problemDetail.setDetail(exception.getMessage());
-        problemDetail.setProperties(Map.of(
-                "code", 1003
-        ));
         problemDetail.setInstance(AppUtil.requestForwardUri(request));
 
         var jsonString = this.objectMapper.writeValueAsString(problemDetail);

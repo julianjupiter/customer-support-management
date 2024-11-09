@@ -12,11 +12,11 @@ public class AppUtil {
     private AppUtil() {
     }
 
-    public static URI problemDetailTypeUri(HttpServletRequest request, HttpStatus status, int errorCode) {
+    public static URI problemDetailTypeUri(HttpServletRequest request, HttpStatus status) {
         var url = URI.create(request.getRequestURL().toString());
         var port = (url.getPort() == 80) ? "" : (":" + url.getPort());
 
-        return URI.create(url.getScheme() + "://" + url.getHost() + port + request.getContextPath() + "/problem-detail/types?http-status=" + status.value() + "&error-code=" + errorCode);
+        return URI.create(url.getScheme() + "://" + url.getHost() + port + request.getContextPath() + "/problem-detail/types?http-status=" + status.value());
     }
 
     public static URI requestForwardUri(HttpServletRequest request) {

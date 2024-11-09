@@ -5,15 +5,18 @@
     <title>{{ page }}</title>
 </head>
     <body>
-        <p>{{ page }} - List</p>
+        <p>{{ page }} - HTTP Status Codes</p>
         <ol>
-            <li>HTTP Status 400</li>
-            <li>HTTP Status 401</li>
-            <li>HTTP Status 403</li>
-            <li>HTTP Status 404</li>
-            <li>HTTP Status 405</li>
-            <li>HTTP Status 422</li>
-            <li>HTTP Status 500</li>
+            <li>HTTP Status <a href="?http-status=400" alt="HTTP Status 400">400</a></li>
+            <li>HTTP Status <a href="?http-status=401" alt="HTTP Status 401">401</a></li>
+            <li>HTTP Status <a href="?http-status=403" alt="HTTP Status 403">403</a></li>
+            <li>HTTP Status <a href="?http-status=404" alt="HTTP Status 404">404</a></li>
+            <li>HTTP Status <a href="?http-status=405" alt="HTTP Status 405">405</a></li>
+            <li>HTTP Status <a href="?http-status=422" alt="HTTP Status 422">422</a></li>
+            <li>HTTP Status <a href="?http-status=500" alt="HTTP Status 500">500</a></li>
+            <li>HTTP Status <a href="?http-status=502" alt="HTTP Status 502">502</a></li>
+            <li>HTTP Status <a href="?http-status=503" alt="HTTP Status 503">503</a></li>
+            <li>HTTP Status <a href="?http-status=504" alt="HTTP Status 504">504</a></li>
         </ol>
     </body>
 </html>

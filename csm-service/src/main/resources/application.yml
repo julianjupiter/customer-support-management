@@ -23,5 +23,6 @@ application:
     id-for-encode: ${ID_FOR_ENCODE:bcrypt}
     jwt:
       secret-key: ${JWT_SECRET_KEY:383658124f0f220e461465fe46e0ac1fca74074bfac8de1a57c7f234ed731880af8084bb78db48047834779167dd6967a04b6e9a7604a89428e80839bf0dcac2}
-      # 5 minutes
-      expiration: ${JWT_EXPIRATION:300000}
+      # 1 min = 60000
+      # 1 hr = 60000 * 60
+      expiration: ${JWT_EXPIRATION:3600000}

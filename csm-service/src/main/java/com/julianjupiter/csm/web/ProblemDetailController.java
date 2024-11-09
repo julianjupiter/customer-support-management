@@ -18,9 +18,8 @@ public class ProblemDetailController {
                        Model model) {
         model.addAttribute("page", "Problem Detail Types");
 
-        if (httpStatus != null && errorCode != null) {
+        if (httpStatus != null) {
             model.addAttribute("httpStatus", httpStatus);
-            model.addAttribute("errorCode", errorCode);
             return "problem-detail/type";
         }
 
