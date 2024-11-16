@@ -37,8 +37,8 @@ class DefaultUserDetailsService implements UserDetailsService {
                         user.isAccountNonExpired(),
                         user.isCredentialsNonExpired(),
                         user.isAccountNonLocked(),
-                        user.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                        user.getUserRoles().stream()
+                                .map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getName().name()))
                                 .collect(Collectors.toSet())
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("User does not exist"));

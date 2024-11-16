@@ -1,4 +1,4 @@
-package com.julianjupiter.csm.exception;
+package com.julianjupiter.csm.dto;
 
 /**
  * @author Julian Jupiter

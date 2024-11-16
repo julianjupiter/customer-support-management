@@ -3,11 +3,10 @@ package com.julianjupiter.csm.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 import java.time.Instant;
 import java.util.Set;
@@ -23,8 +22,8 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleType name;
     private String description;
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<User> users;
+    @OneToMany(mappedBy = "role")
+    private Set<UserRole> userRoles;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -55,12 +54,12 @@ public class Role {
         return this;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public Role setUsers(Set<User> users) {
-        this.users = users;
+    public Role setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
         return this;
     }
 

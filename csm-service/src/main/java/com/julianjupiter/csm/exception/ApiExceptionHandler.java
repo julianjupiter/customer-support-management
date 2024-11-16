@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Map;
+
 /**
  * @author Julian Jupiter
  */
@@ -32,6 +34,12 @@ public class ApiExceptionHandler {
         var problemDetail = ProblemDetail.forStatus(httpStatusCode);
         problemDetail.setType(AppUtil.problemDetailTypeUri(request, (HttpStatus) httpStatusCode));
         problemDetail.setDetail(exception.getMessage());
+
+        if (!exception.errorMessages().isEmpty()) {
+            problemDetail.setProperties(Map.ofEntries(
+                    Map.entry("errors", exception.errorMessages())
+            ));
+        }
 
         return new ResponseEntity<>(problemDetail, httpStatusCode);
     }

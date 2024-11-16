@@ -2,12 +2,14 @@ package com.julianjupiter.csm.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Set;
@@ -16,6 +18,7 @@ import java.util.Set;
  * @author Julian Jupiter
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     private String id;
@@ -33,18 +36,17 @@ public class User {
     private Boolean enabled;
     private Boolean emailVerified;
     private Boolean mobileNumberVerified;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private Set<Role> roles;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserRole> userRoles;
+    @OneToMany(mappedBy = "agent")
     private Set<Ticket> tickets;
+    @CreatedBy
     private String createdBy;
+    @CreatedDate
     private Instant createdAt;
+    @LastModifiedBy
     private String updatedBy;
+    @LastModifiedDate
     private Instant updatedAt;
 
     public String getId() {
@@ -182,12 +184,12 @@ public class User {
         return this;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public User setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public User setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
         return this;
     }
 
