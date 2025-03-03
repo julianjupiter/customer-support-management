@@ -1,0 +1,86 @@
+#userImageView {
+    -fx-background-radius: 20;
+}
+
+#applicationNameLabel,
+#actionLabel {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.textFillWhite {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.whiteLabel {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.whiteTextFill {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.dangerTextFill {
+    -fx-text-fill: #ee1111 !important;
+}
+
+.submenuPane {
+    -fx-background-color: #ECEFF1 !important;
+}
+
+.submenuLabel {
+    -fx-text-fill: #3f51b5 !important;
+}
+
+.disabledTextField {
+    -fx-background-color: #ffffff !important;
+    -fx-border-color: #999999;
+    -fx-border-width: 2;
+    -fx-text-fill: #000000 !important;
+}
+
+.disabledTextArea .content {
+    -fx-background-color: #ffffff !important;
+    -fx-border-color: #999999;
+    -fx-border-width: 2;
+    -fx-text-fill: #000000 !important;
+}
+
+/* Button */
+.buttonPrimary {
+    -fx-background-color: #0078d7 !important;
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.buttonPrimary:hover {
+    -fx-border-color: #2b5797 !important;
+}
+
+.buttonPrimary:pressed {
+    -fx-background-color: #2b5797 !important;
+}
+
+.buttonPrimary:disabled {
+    -fx-background-color: #cdcdcd !important;
+    -fx-text-fill: #3c3c3c !important;
+}
+
+.buttonDanger {
+    -fx-background-color: #ee1111 !important;
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.buttonDanger:hover {
+    -fx-border-color: #b91d47 !important;
+}
+
+.buttonDanger:pressed {
+    -fx-background-color: #b91d47 !important;
+}
+
+// Profile MenuButton
+.menu-button > .label {
+    -fx-text-fill: #FFFFFF !important;
+}
+.menu-button > .arrow-button > .arrow {
+    -fx-background-color: #FFFFFF !important;
+}
