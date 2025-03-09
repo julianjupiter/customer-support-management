@@ -41,6 +41,7 @@ class DefaultJwtService implements JwtService {
         var user = (JwtUser) authentication.getPrincipal();
         var claims = Map.of(
                 "user_id", user.getId(),
+                "username", user.getUsername(),
                 "name", user.getName(),
                 "first_name", user.getFirstName(),
                 "last_name", user.getLastName(),
@@ -73,18 +74,17 @@ class DefaultJwtService implements JwtService {
 
     private TokenDto createToken(Map<String, Object> claims, String username) {
         long currentTimeMillis = System.currentTimeMillis();
-        var expiresIn = new Date(currentTimeMillis + this.expiration);
         var accessToken = Jwts.builder()
                 .id(Uuid.create().toString())
                 .issuer(this.applicationName)
                 .claims(claims)
                 .subject(username)
                 .issuedAt(new Date(currentTimeMillis))
-                .expiration(expiresIn)
-                .signWith(getSignKey())
+                .expiration(new Date(System.currentTimeMillis() + this.expiration))
+                .signWith(this.getSignKey())
                 .compact();
 
-        return new TokenDto(accessToken, expiresIn, "Bearer");
+        return new TokenDto(accessToken, "Bearer");
     }
 
     private Key getSignKey() {

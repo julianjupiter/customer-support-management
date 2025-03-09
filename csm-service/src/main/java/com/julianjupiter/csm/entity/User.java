@@ -3,6 +3,7 @@ package com.julianjupiter.csm.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import org.springframework.data.annotation.CreatedBy;
@@ -36,7 +37,7 @@ public class User {
     private Boolean enabled;
     private Boolean emailVerified;
     private Boolean mobileNumberVerified;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<UserRole> userRoles;
     @OneToMany(mappedBy = "agent")
     private Set<Ticket> tickets;
