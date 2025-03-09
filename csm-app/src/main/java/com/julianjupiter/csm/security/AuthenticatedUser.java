@@ -9,7 +9,8 @@ public record AuthenticatedUser(
         String userId,
         String username,
         String email,
+        String name,
         String firstName,
         String lastName,
-        List<Role>roles) {
+        List<Role> roles) {
 }

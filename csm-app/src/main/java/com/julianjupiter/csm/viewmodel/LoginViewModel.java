@@ -1,19 +1,19 @@
 package com.julianjupiter.csm.viewmodel;
 
 import com.julianjupiter.csm.repository.LoginRepository;
-import com.julianjupiter.csm.security.SecurityUtil;
 import com.julianjupiter.csm.security.LoginStatus;
+import com.julianjupiter.csm.security.SecurityUtil;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import java.lang.System.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Julian Jupiter
  */
 public class LoginViewModel {
-    private static final Logger LOGGER = System.getLogger(LoginViewModel.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginViewModel.class);
     private final LoginRepository loginRepository;
     private final StringProperty username = new SimpleStringProperty();
     private final StringProperty password = new SimpleStringProperty();
@@ -64,7 +64,7 @@ public class LoginViewModel {
     }
 
     public void login() {
-        LOGGER.log(Logger.Level.INFO, () -> "LOGIN");
+        LOGGER.info("LOGIN");
 
         this.loginRepository.login(this.getUsername(), this.getPassword());
 
@@ -73,8 +73,8 @@ public class LoginViewModel {
     }
 
     public void logout() {
-        LOGGER.log(System.Logger.Level.INFO, () -> "LOGOUT");
+        LOGGER.info("LOGOUT");
 
-        SecurityUtil.remove();
+        SecurityUtil.remove(true);
     }
 }

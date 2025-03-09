@@ -1,9 +1,13 @@
 package com.julianjupiter.csm.security;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Julian Jupiter
  */
-public record TokenDto(String accessToken, Date expiresIn, String tokenType) {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record TokenDto(
+        @JsonProperty("access_token") String accessToken,
+        @JsonProperty("token_type") String tokenType) {
 }

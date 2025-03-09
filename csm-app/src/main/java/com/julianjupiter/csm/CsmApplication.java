@@ -11,7 +11,6 @@ import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 

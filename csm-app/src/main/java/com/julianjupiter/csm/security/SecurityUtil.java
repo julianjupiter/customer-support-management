@@ -2,20 +2,24 @@ package com.julianjupiter.csm.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jwt.SignedJWT;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
  * @author Julian Jupiter
  */
 public class SecurityUtil {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private SecurityUtil() {
 
     }
 
     public static void setToken(TokenDto tokenDto) {
-        SecurityStorage.store(tokenDto, authenticatedUser(tokenDto));
+        SecurityStorage.store(tokenDto, extractPayload(tokenDto.accessToken()));
     }
 
     public static Optional<String> accessToken() {
@@ -34,12 +38,28 @@ public class SecurityUtil {
         }
     }
 
-    public static boolean isActive() {
-        return SecurityStorage.tokenExpiresIn().before(new Date());
+    public static Instant tokenIssuedAt() {
+        return SecurityStorage.tokenIssuedAt();
     }
 
-    public static void remove() {
+    public static Instant tokenExpiresAt() {
+        return SecurityStorage.tokenExpiresAt();
+    }
+
+    public static boolean isTokenActive() {
+        return Instant.now().isBefore(SecurityStorage.tokenExpiresAt());
+    }
+
+    public static void remove(boolean debug) {
         SecurityStorage.remove();
+
+        if (debug) {
+            show();
+        }
+    }
+
+    public static void show() {
+        SecurityStorage.show();
     }
 
     public static Optional<String> tokenType() {
@@ -50,13 +70,15 @@ public class SecurityUtil {
         }
     }
 
-    private static AuthenticatedUser authenticatedUser(TokenDto tokenDto) {
-        var objectMapper = new ObjectMapper();
-
+    private static TokenPayload extractPayload(String accessToken) {
         try {
-            return objectMapper.readValue(tokenDto.accessToken(), AuthenticatedUser.class);
+            var decodedJWT = SignedJWT.parse(accessToken);
+            var payload = decodedJWT.getPayload().toString();
+            return OBJECT_MAPPER.readValue(payload, TokenPayload.class);
+        } catch (ParseException e) {
+            throw new SecurityException("Invalid access token");
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new SecurityException("Error JSON processing of access token payload");
         }
     }
 }

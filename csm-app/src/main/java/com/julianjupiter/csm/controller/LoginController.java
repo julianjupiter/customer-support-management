@@ -26,13 +26,15 @@ import javafx.stage.StageStyle;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LoginController implements Controller, Initializable {
-    private static final System.Logger LOGGER = System.getLogger(LoginController.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
     private final LoginViewModel loginViewModel;
     private ResourceBundle resourceBundle;
     private Stage csmStage;
@@ -134,7 +136,7 @@ public class LoginController implements Controller, Initializable {
 
     @FXML
     private void login() {
-        LOGGER.log(System.Logger.Level.INFO, () -> "LOGIN");
+        LOGGER.info("LOGIN");
 
         this.loginViewModel.login();
         this.usernameTextField.setText("");

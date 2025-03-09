@@ -11,6 +11,7 @@ public class Constants {
     public static final String CSS_STYLE = "/css/style.css";
     public static final Locale LOCALE_EN = Locale.ENGLISH;
     public static final String MESSAGES = "messages/messages";
+    public static final String CSM_BASE_URL = "http://localhost:8080/customer-support-management/api";
 
     private Constants() {
     }
